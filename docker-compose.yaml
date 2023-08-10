@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+
+  postgres:
+    container_name: database
+    image: postgres:15.3-alpine3.18
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: user
+    volumes:
+      - pgVolume:/var/lib/postgresql/data
+    networks:
+      - crawler_network
+
+networks:
+  crawler_network:
+    external: false
+
+volumes:
+  pgVolume:
