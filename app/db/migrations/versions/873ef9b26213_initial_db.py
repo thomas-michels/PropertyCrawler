@@ -39,26 +39,38 @@ CREATE TABLE public.modalities (
 	CONSTRAINT modality_pk PRIMARY KEY (id)
 );
 
+CREATE TABLE public.streets (
+	id int4 NOT NULL,
+	"name" varchar NOT NULL,
+	CONSTRAINT street_pk PRIMARY KEY (id)
+);
+
 CREATE TABLE public.properties (
 	id serial4 NOT NULL,
 	company_id int4 NOT NULL,
 	code int4 NOT NULL,
 	title varchar(255) NULL,
-	price int4 NOT NULL,
+	price money NOT NULL,
 	description varchar NULL,
 	neighborhood_id int4 NOT NULL,
-	created_at timestamp with time zone NOT NULL,
-	updated_at timestamp with time zone NOT NULL,
+	created_at timestamptz NOT NULL,
+	updated_at timestamptz NOT NULL,
 	rooms int2 NOT NULL,
 	bathrooms int2 NOT NULL,
-	"size" int2 NOT NULL,
+	"size" numeric NOT NULL,
 	parking_space int2 NOT NULL,
 	modality_id int4 NOT NULL,
+	image_url varchar NOT NULL,
+	property_url varchar NOT NULL,
+	"type" varchar NOT NULL,
+	street_id int4 NULL,
+	"number" varchar(20) NULL,
 	CONSTRAINT property_pk PRIMARY KEY (id),
-	CONSTRAINT property_unique UNIQUE (company_id,code),
-	CONSTRAINT property_fk FOREIGN KEY (company_id) REFERENCES public.companies(id),
+	CONSTRAINT property_unique UNIQUE (company_id, code),
 	CONSTRAINT properties_fk FOREIGN KEY (neighborhood_id) REFERENCES public.neighborhoods(id),
-	CONSTRAINT properties_fk_1 FOREIGN KEY (modality_id) REFERENCES public.modalities(id)
+	CONSTRAINT property_fk FOREIGN KEY (company_id) REFERENCES public.companies(id),
+	CONSTRAINT property_modality_fk FOREIGN KEY (modality_id) REFERENCES public.modalities(id),
+	CONSTRAINT property_street_fk FOREIGN KEY (street_id) REFERENCES public.streets(id)
 );
 
 """)

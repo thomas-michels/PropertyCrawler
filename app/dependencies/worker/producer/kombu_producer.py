@@ -30,13 +30,13 @@ class KombuProducer:
                 producer.publish(
                     body=message.model_dump(),
                     exchange=connect_on_exchange(_env.RBMQ_EXCHANGE),
-                    routing_key=message.sended_to,
+                    routing_key=message.sent_to,
                 )
 
-            _logger.info(f"Sent message to {message.sended_to}")
+            _logger.info(f"Sent message to {message.sent_to}")
             return True
 
         except Exception as error:
             _logger.error(
-                f"Error on send message to {message.sended_to}. Error: {error}"
+                f"Error on send message to {message.sent_to}. Error: {error}"
             )
