@@ -8,7 +8,7 @@ class PGConnection(DBConnection):
     def __init__(self, conn: Connection) -> None:
         self.conn = conn
 
-    def execute(self, sql_statement: str, values: tuple = None, all: bool = False):
+    def execute(self, sql_statement: str, values: dict = None, all: bool = False):
         with self.conn.cursor(row_factory=dict_row) as cursor:
             cursor.execute(sql_statement, values)
             return cursor.fetchall() if all else cursor.fetchone()

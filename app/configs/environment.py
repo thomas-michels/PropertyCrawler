@@ -33,6 +33,9 @@ class Environment(BaseSettings):
     UPDATE_PROPERTY_CHANNEL: str
     INACTIVE_PROPERTY_CHANNEL: str
 
+    # PORTAIS
+    PORTAL_IMOVEIS_URL: str
+
     class Config:
         """Load config file"""
 

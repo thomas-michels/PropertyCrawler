@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 class DBConnection(ABC):
 
     @abstractmethod
-    def execute(self, sql_statement: str, values: tuple = None, many: bool = False):
+    def execute(self, sql_statement: str, values: dict = None, many: bool = False):
         """
         Method to execute query
         """
