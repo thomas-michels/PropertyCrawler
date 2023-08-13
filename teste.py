@@ -105,7 +105,6 @@ for button in buttons:
     else:
         price = 0
 
-
     comments = soup.find_all(text=lambda text: isinstance(text, Comment))
 
     street = ""

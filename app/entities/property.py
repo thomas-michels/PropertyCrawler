@@ -39,6 +39,7 @@ class Property(BaseModel):
     type: str = Field(example="House")
     number: str = Field(example="123")
     street_id: int = Field(example=123)
+    is_active: bool = Field(examples=True)
     created_at: datetime = Field(example=str(datetime.now()), default=datetime.now())
     updated_at: datetime = Field(example=str(datetime.now()), default=datetime.now())
 
