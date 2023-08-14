@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup, Comment
-from app.entities import RawProperty, CompanyEnum
+from app.entities import RawProperty
 import requests
 import re
 
@@ -129,7 +129,7 @@ for button in buttons:
     properties.append(
         RawProperty(
             code=int(code),
-            company=CompanyEnum.PORTAL_IMOVEIS,
+            company="PORTAL_IMOVEIS",
             title=title,
             price=price,
             description=description,

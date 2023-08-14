@@ -18,9 +18,9 @@ class ModalityRepository(Repository):
             VALUES(%(name)s)
             RETURNING id, name;
             '''
+            name = name.lower()
 
             raw_modality = self.conn.execute(sql_statement=query, values={"name": name})
-            self.conn.commit()
 
             if raw_modality:
                 return Modality(**raw_modality)
@@ -43,6 +43,8 @@ class ModalityRepository(Repository):
     def select_by_name(self, name: str) -> Modality:
         try:
             query = 'SELECT id, "name" FROM public.modalities WHERE name=%(name)s;'
+
+            name = name.lower()
 
             raw_modality = self.conn.execute(sql_statement=query, values={"name": name})
 

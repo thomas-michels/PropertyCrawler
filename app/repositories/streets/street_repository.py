@@ -20,7 +20,6 @@ class StreetRepository(Repository):
             '''
 
             raw_street = self.conn.execute(sql_statement=query, values={"name": name})
-            self.conn.commit()
 
             if raw_street:
                 return Street(**raw_street)

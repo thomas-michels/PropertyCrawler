@@ -1,5 +1,6 @@
-from enum import Enum
+from pydantic import BaseModel, Field
 
-class CompanyEnum(str, Enum):
-    PORTAL_IMOVEIS = "Portal Imóveis"
-    ZAP_IMOVEIS = "ZAP Imóveis"
+
+class Company(BaseModel):
+    id: int = Field(example=123)
+    name: str = Field(example="PORTAL IMOVEIS")
