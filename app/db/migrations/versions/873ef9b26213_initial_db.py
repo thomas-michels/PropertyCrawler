@@ -84,6 +84,16 @@ CREATE TABLE public.property_histories (
 	CONSTRAINT property_histories_fk FOREIGN KEY (property_id) REFERENCES public.properties(id)
 );
 
+CREATE TABLE public.events (
+	id uuid NOT NULL,
+	created_at timestamptz NOT NULL,
+	updated_at timestamp NOT NULL,
+	sent_to varchar(50) NOT NULL,
+	payload jsonb NOT NULL,
+	origin varchar(50) NOT NULL,
+	CONSTRAINT events_pk PRIMARY KEY (id, origin, sent_to)
+);
+
 """)
 
 

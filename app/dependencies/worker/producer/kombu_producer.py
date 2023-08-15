@@ -5,6 +5,8 @@
 from kombu.mixins import Producer
 from app.dependencies.worker.utils import start_connection_bus, connect_on_exchange, EventSchema
 from app.configs import get_logger, get_environment
+from app.repositories.events.event_repository import EventRepository
+from app.db import DBConnection
 
 _env = get_environment()
 _logger = get_logger(name=__name__)
@@ -16,7 +18,7 @@ class KombuProducer:
     """
 
     @classmethod
-    def send_messages(cls, message: EventSchema) -> bool:
+    def send_messages(cls, conn: DBConnection, message: EventSchema) -> bool:
         """
         Method to send messages
 
@@ -34,6 +36,10 @@ class KombuProducer:
                 )
 
             _logger.info(f"Sent message to {message.sent_to}")
+
+            event_repository = EventRepository(connection=conn)
+            event_repository.insert(event=message)
+
             return True
 
         except Exception as error:

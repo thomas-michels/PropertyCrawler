@@ -1,12 +1,44 @@
 from app.callbacks.callback_interface.callback_base import Callback
 from app.db import DBConnection
-from app.dependencies.worker import EventSchema
+from app.entities import RawProperty
+from app.dependencies.worker import EventSchema, KombuProducer
+from app.composers import property_composer
+from app.configs import get_logger, get_environment
+
+_logger = get_logger(__name__)
+_env = get_environment()
 
 
 class UpdatePropertyCallback(Callback):
 
     def __init__(self, conn: DBConnection) -> None:
         super().__init__(conn)
+        self.__property_services = property_composer(connection=self.conn)
 
     def handle(self, message: EventSchema) -> bool:
-        return super().handle(message)
+        try:
+            raw_property = RawProperty(**message.payload)
+
+            property_in_db = self.__property_services.search_by_code_and_company(
+                    code=raw_property.code,
+                    company=raw_property.company
+            )
+
+            is_updated = self.__property_services.update_price(
+                id=property_in_db.id,
+                new_price=raw_property.price
+            )
+            if is_updated:
+                _logger.info(f"Property with id {property_in_db.id} has a new price!")
+                new_message = EventSchema(
+                    id=message.id,
+                    origin=message.sent_to,
+                    sent_to=_env.PROPERTY_OUT_CHANNEL
+                )
+                KombuProducer.send_messages(conn=self.conn, message=new_message)
+
+            return is_updated
+
+        except Exception as error:
+            _logger.error(f"Error: {str(error)}. Data: {message.model_dump()}")
+            return False
