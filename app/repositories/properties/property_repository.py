@@ -53,6 +53,23 @@ class PropertyRepository(Repository):
         except Exception as error:
             _logger.error(f"Error: {str(error)}. Data: {dict(id=id)}")
 
+    def select_by_code_and_company(self, code: int, company_id: int) -> PropertyInDB:
+        try:
+            query = '''
+            SELECT id, company_id, code, title, price, description, neighborhood_id,
+            created_at, updated_at, rooms, bathrooms, "size", parking_space,
+            modality_id, image_url, property_url, "type", street_id, "number", is_active
+            FROM public.properties
+            WHERE code=%(code)s AND company_id=%(company_id)s;
+            '''
+            raw_property = self.conn.execute(sql_statement=query, values={"code": code, "company_id": company_id})
+
+            if raw_property:
+                return PropertyInDB(**raw_property)
+
+        except Exception as error:
+            _logger.error(f"Error: {str(error)}. Data: {dict(code=code, company_id=company_id)}")
+
     def select_all_codes(self, active: bool = False) -> List[SimpleProperty]:
         try:
             query = 'SELECT id, company_id, code, property_url FROM public.neighborhoods WHERE is_active=%(is_active)s;'

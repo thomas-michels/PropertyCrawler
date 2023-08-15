@@ -32,6 +32,9 @@ class Environment(BaseSettings):
     SAVE_PROPERTY_CHANNEL: str
     UPDATE_PROPERTY_CHANNEL: str
     INACTIVE_PROPERTY_CHANNEL: str
+    PROPERTY_VALIDATOR_CHANNEL: str
+    CHARACTERISTICS_CHANNEL: str
+    NEW_ADDRESS_CHANNEL: str
 
     # PORTAIS
     PORTAL_IMOVEIS_URL: str
@@ -40,3 +43,4 @@ class Environment(BaseSettings):
         """Load config file"""
 
         env_file = ".env"
+        extra='ignore'

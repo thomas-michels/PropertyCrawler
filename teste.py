@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup, Comment
-from app.entities import RawProperty
+# from app.entities.property import RawProperty
 import requests
 import re
 
@@ -126,27 +126,27 @@ for button in buttons:
 
         street, number = re.split(r'\s*,\s*', string)
     
-    properties.append(
-        RawProperty(
-            code=int(code),
-            company="PORTAL_IMOVEIS",
-            title=title,
-            price=price,
-            description=description,
-            neighborhood=neighborhood,
-            rooms=int(room),
-            bathrooms=int(bathroom),
-            size=float(cleaned_size),
-            parking_space=int(parking_space),
-            modality=modality,
-            property_url=url,
-            image_url=image,
-            type=type,
-            number=number,
-            street=street
-        )
-    )
+#     properties.append(
+#         RawProperty(
+#             code=int(code),
+#             company="PORTAL_IMOVEIS",
+#             title=title,
+#             price=price,
+#             description=description,
+#             neighborhood=neighborhood,
+#             rooms=int(room),
+#             bathrooms=int(bathroom),
+#             size=float(cleaned_size),
+#             parking_space=int(parking_space),
+#             modality=modality,
+#             property_url=url,
+#             image_url=image,
+#             type=type,
+#             number=number,
+#             street=street
+#         )
+#     )
 
-for i in properties:
-    print(f"{i.model_dump()}")
-    break
+# for i in properties:
+#     print(f"{i.model_dump()}")
+#     break

@@ -9,7 +9,7 @@ from app.callbacks.properties import (
     UpdatePropertyCallback,
     InactivePropertyCallback
 )
-
+from app.callbacks.address import NewAddressCallback
 
 _logger = get_logger(name=__name__)
 _env = get_environment()
@@ -39,6 +39,10 @@ class RegisterQueues:
 
         queue_manager.register_callback(
             _env.INACTIVE_PROPERTY_CHANNEL, InactivePropertyCallback
+        )
+
+        queue_manager.register_callback(
+            _env.NEW_ADDRESS_CHANNEL, NewAddressCallback
         )
 
         _logger.info("All queues started")

@@ -15,8 +15,8 @@ class KombuProducer:
     Class for Producer to send messages in queues
     """
 
-    @staticmethod
-    def send_messages(message: EventSchema) -> bool:
+    @classmethod
+    def send_messages(cls, message: EventSchema) -> bool:
         """
         Method to send messages
 

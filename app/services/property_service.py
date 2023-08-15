@@ -81,6 +81,11 @@ class PropertyService:
 
     def search_by_id(self, id: int) -> PropertyInDB:
         return self.__property_repository.select_by_id(id=id)
+    
+    def search_by_code_and_company(self, code: int, company: str) -> PropertyInDB:
+        company_in_db = self.__company_repository.select_by_name(name=company)
+        if company_in_db:
+            return self.__property_repository.select_by_code_and_company(code=code, company_id=company_in_db.id)
 
     def update_price(self, id: int, new_price: float) -> bool:
         property = self.__property_repository.select_by_id(id=id)
