@@ -1,9 +1,9 @@
 from app.callbacks.callback_interface.callback_base import Callback
 from app.db import DBConnection
-from app.dependencies.worker import EventSchema
+from app.dependencies.worker.utils.event_schema import EventSchema
+from app.dependencies.worker import KombuProducer
 from app.composers import property_composer
 from app.configs import get_logger, get_environment
-from app.dependencies.worker import KombuProducer, EventSchema
 
 _logger = get_logger(__name__)
 _env = get_environment()

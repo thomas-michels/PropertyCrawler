@@ -1,6 +1,6 @@
 from app.db import DBConnection
 from app.repositories.base_repository import Repository
-from app.dependencies.worker import EventSchema
+from app.dependencies.worker.utils.event_schema import EventSchema
 from app.configs import get_logger
 from json import dumps
 

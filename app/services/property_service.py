@@ -61,7 +61,7 @@ class PropertyService:
         street_in_db = self.__street_repository.select_by_name(name=raw_property.street)
 
         if not street_in_db:
-            street_in_db = self.__street_repository.insert(name=raw_property.street)
+            street_in_db = self.__street_repository.insert(neighborhood_id=neighborhood_in_db.id, name=raw_property.street)
 
         company_in_db = self.__company_repository.select_by_name(name=raw_property.company)
 

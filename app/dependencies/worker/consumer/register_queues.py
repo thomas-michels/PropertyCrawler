@@ -7,8 +7,11 @@ from app.callbacks.properties import (
     PropertyInCallback,
     SavePropertyCallback,
     UpdatePropertyCallback,
-    InactivePropertyCallback
+    InactivePropertyCallback,
+    PropertyValidatorCallback,
+    PropertyOutCallback
 )
+from app.callbacks.characteristics import CharacteristicCallback
 from app.callbacks.address import NewAddressCallback
 
 _logger = get_logger(name=__name__)
@@ -39,6 +42,18 @@ class RegisterQueues:
 
         queue_manager.register_callback(
             _env.INACTIVE_PROPERTY_CHANNEL, InactivePropertyCallback
+        )
+
+        queue_manager.register_callback(
+            _env.PROPERTY_VALIDATOR_CHANNEL, PropertyValidatorCallback
+        )
+
+        queue_manager.register_callback(
+            _env.PROPERTY_OUT_CHANNEL, PropertyOutCallback
+        )
+
+        queue_manager.register_callback(
+            _env.CHARACTERISTICS_CHANNEL, CharacteristicCallback
         )
 
         queue_manager.register_callback(

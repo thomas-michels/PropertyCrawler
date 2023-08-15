@@ -3,7 +3,8 @@
 """
 
 from kombu.mixins import Producer
-from app.dependencies.worker.utils import start_connection_bus, connect_on_exchange, EventSchema
+from app.dependencies.worker.utils import start_connection_bus, connect_on_exchange
+from app.dependencies.worker.utils.event_schema import EventSchema
 from app.configs import get_logger, get_environment
 from app.repositories.events.event_repository import EventRepository
 from app.db import DBConnection

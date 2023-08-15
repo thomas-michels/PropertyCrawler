@@ -32,17 +32,20 @@ CREATE TABLE public.neighborhoods (
 	CONSTRAINT neighborhood_pk PRIMARY KEY (id),
 	CONSTRAINT neighborhood_un UNIQUE ("name")
 );
+               
+CREATE TABLE public.streets (
+	id int4 NOT NULL DEFAULT nextval('streats_id_seq'::regclass),
+	"name" varchar NOT NULL,
+	neighborhood_id int4 NOT NULL,
+	zip_code int4 NULL,
+	CONSTRAINT street_pk PRIMARY KEY (id),
+	CONSTRAINT streets_fk FOREIGN KEY (neighborhood_id) REFERENCES public.neighborhoods(id)
+);
 
 CREATE TABLE public.modalities (
 	id serial4 NOT NULL,
 	"name" varchar(50) NOT NULL,
 	CONSTRAINT modality_pk PRIMARY KEY (id)
-);
-
-CREATE TABLE public.streets (
-	id int4 NOT NULL,
-	"name" varchar NOT NULL,
-	CONSTRAINT street_pk PRIMARY KEY (id)
 );
 
 CREATE TABLE public.properties (

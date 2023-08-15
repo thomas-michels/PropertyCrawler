@@ -4,7 +4,7 @@
 
 from abc import abstractmethod, ABC
 from app.db import DBConnection
-from app.dependencies.worker import EventSchema
+from app.dependencies.worker.utils.event_schema import EventSchema
 
 
 class Callback(ABC):

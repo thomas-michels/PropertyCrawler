@@ -1,6 +1,6 @@
 from app.callbacks.callback_interface.callback_base import Callback
 from app.db import DBConnection
-from app.dependencies.worker import EventSchema
+from app.dependencies.worker.utils.event_schema import EventSchema
 from app.configs import get_logger
 
 _logger = get_logger(__name__)
