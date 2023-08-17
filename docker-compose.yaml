@@ -24,6 +24,15 @@ services:
     networks:
       - crawler_network
 
+  redis:
+    container_name: cache
+    image: redis:alpine3.18
+    restart: always
+    ports:
+      - 6379:6379
+    networks:
+      - crawler_network
+
 networks:
   crawler_network:
     external: false

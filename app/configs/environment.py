@@ -27,6 +27,11 @@ class Environment(BaseSettings):
     DATABASE_MIN_CONNECTIONS: int
     DATABASE_MAX_CONNECTIONS: int
 
+    # REDIS
+    REDIS_HOST: str
+    REDIS_PORT: str
+    TIMED_CACHE: int
+
     # QUEUES
     PROPERTY_IN_CHANNEL: str
     SAVE_PROPERTY_CHANNEL: str

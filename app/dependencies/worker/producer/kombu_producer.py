@@ -28,8 +28,8 @@ class KombuProducer:
         :return: bool
         """
         try:
-            with start_connection_bus() as conn:
-                producer = Producer(conn)
+            with start_connection_bus() as bus_conn:
+                producer = Producer(bus_conn)
                 producer.publish(
                     body=message.model_dump(),
                     exchange=connect_on_exchange(_env.RBMQ_EXCHANGE),

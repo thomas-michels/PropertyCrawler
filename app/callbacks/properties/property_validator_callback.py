@@ -1,5 +1,6 @@
 from app.callbacks.callback_interface.callback_base import Callback
 from app.db import DBConnection
+from app.dependencies import RedisClient
 from app.entities import RawProperty
 from app.dependencies.worker.utils.event_schema import EventSchema
 from app.dependencies.worker import KombuProducer
@@ -12,9 +13,9 @@ _logger = get_logger(__name__)
 
 class PropertyValidatorCallback(Callback):
 
-    def __init__(self, conn: DBConnection) -> None:
-        super().__init__(conn)
-        self.__property_services = property_composer(connection=self.conn)
+    def __init__(self, conn: DBConnection, redis_conn: RedisClient) -> None:
+        super().__init__(conn, redis_conn)
+        self.__property_services = property_composer(connection=self.conn, redis_connection=self.redis_conn)
 
     def handle(self, message: EventSchema) -> bool:
         try:

@@ -4,8 +4,8 @@ from app.db import DBConnection
 class Repository:
 
     def __init__(self, connection: DBConnection) -> None:
-        self.conn = connection
+        self._conn = connection
 
     @property
     def conn(self) -> DBConnection:
-        return self.conn
+        return self._conn

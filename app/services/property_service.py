@@ -1,4 +1,4 @@
-from app.repositories.properties import PropertyRepository
+from app.repositories.properties import PropertyRepository, RedisPropertyRepository
 from app.repositories.property_history import PropertyHistoryRepository
 from app.repositories.modalities import ModalityRepository
 from app.repositories.neighborhoods import NeighborhoodRepository
@@ -19,6 +19,7 @@ class PropertyService:
     def __init__(
             self,
             property_repository: PropertyRepository,
+            redis_property_repository: RedisPropertyRepository,
             property_history_repository: PropertyHistoryRepository,
             modality_repository: ModalityRepository,
             neighborhood_repository: NeighborhoodRepository,
@@ -26,6 +27,7 @@ class PropertyService:
             company_repository: CompanyRepository,
         ) -> None:
         self.__property_repository = property_repository
+        self.__redis_property_repository = redis_property_repository
         self.__property_history_repository = property_history_repository
         self.__modality_repository = modality_repository
         self.__neighborhood_repository = neighborhood_repository

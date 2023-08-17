@@ -1,2 +1,0 @@
-from .characteristics_crawler import CharacteristicsCrawler
-from .property_crawler import PropertyCrawler

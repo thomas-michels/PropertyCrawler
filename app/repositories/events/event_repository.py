@@ -23,6 +23,7 @@ class EventRepository(Repository):
                 "id": event.id,
                 "created_at": event.created_at,
                 "updated_at": event.updated_at,
+                "sent_to": event.sent_to,
                 "payload": dumps(event.payload),
                 "origin": event.origin,
             })

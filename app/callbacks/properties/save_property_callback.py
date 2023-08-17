@@ -1,5 +1,6 @@
 from app.callbacks.callback_interface.callback_base import Callback
 from app.db import DBConnection
+from app.dependencies import RedisClient
 from app.entities import RawProperty
 from app.composers import property_composer
 from app.dependencies.worker.utils.event_schema import EventSchema
@@ -11,9 +12,9 @@ _env = get_environment()
 
 class SavePropertyCallback(Callback):
 
-    def __init__(self, conn: DBConnection) -> None:
-        super().__init__(conn)
-        self.__property_services = property_composer(connection=self.conn)
+    def __init__(self, conn: DBConnection, redis_conn: RedisClient) -> None:
+        super().__init__(conn, redis_conn)
+        self.__property_services = property_composer(connection=self.conn, redis_connection=self.redis_conn)
 
     def handle(self, message: EventSchema) -> bool:
         raw_property = RawProperty(**message.payload)

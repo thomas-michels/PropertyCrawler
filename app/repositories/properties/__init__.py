@@ -1,1 +1,2 @@
 from .property_repository import PropertyRepository
+from .redis_property_repository import RedisPropertyRepository
