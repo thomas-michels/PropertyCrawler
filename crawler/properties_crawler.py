@@ -32,16 +32,20 @@ def start_crawler():
     pages = quantity // page_size
 
     with RawPGConnection() as conn:
+
         for i in range(1, pages + 1):
             time_sleep = randint(5, 15)
             _logger.info(f"Sleeping: {time_sleep}")
             sleep(time_sleep)
+
             offset = page_size * i
             url = f"{_env.PORTAL_IMOVEIS_URL}?page={offset}"
+
             page = requests.get(url=url)
             html = page.text
 
             soup = BeautifulSoup(html, 'html.parser')
+
             buttons = soup.find_all("a", class_="btn btn-primary")
 
             if buttons:
@@ -49,12 +53,16 @@ def start_crawler():
                     url = button.attrs['href']
                     _logger.info(f"New property found: {url}")
 
+                    code = url.split("/")[-1]
+
                     event = EventSchema(
                         id=str(uuid4()),
                         origin="PORTAL_IMOVEIS",
                         sent_to=_env.PROPERTY_IN_CHANNEL,
                         payload={
-                            "property_url": url
+                            "property_url": url,
+                            "company": "Portal Imóveis",
+                            "code": code
                         },
                         created_at=datetime.now(),
                         updated_at=datetime.now()

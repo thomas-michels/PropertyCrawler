@@ -24,6 +24,7 @@ class Environment(BaseSettings):
     DATABASE_USER: str
     DATABASE_PASSWORD: str
     DATABASE_NAME: str
+    ENVIRONMENT: str
     DATABASE_MIN_CONNECTIONS: int
     DATABASE_MAX_CONNECTIONS: int
 

@@ -3,7 +3,7 @@ import sys
 from logging.config import fileConfig
 
 from alembic import context
-from sqlalchemy import engine_from_config, pool
+from sqlalchemy import engine_from_config, pool, MetaData
 
 sys.path.append(str(pathlib.Path(__file__).resolve().parents[4]))
 
@@ -16,7 +16,7 @@ config = context.config
 
 fileConfig(config.config_file_name)  # type: ignore
 
-target_metadata = None
+target_metadata = MetaData(schema=SETTINGS.ENVIRONMENT)
 
 config.set_main_option("sqlalchemy.url", str(DATABASE_URL))
 
@@ -29,9 +29,16 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata)
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+            version_table_schema=target_metadata.schema,
+            include_schemas=True
+        )
 
         with context.begin_transaction():
+            context.execute(f'create schema if not exists {target_metadata.schema};')
+            context.execute(f'set search_path to {target_metadata.schema}')
             context.run_migrations()
 
 

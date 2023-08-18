@@ -6,10 +6,11 @@ Create Date: 2023-08-09 23:21:12.250870
 
 """
 from typing import Sequence, Union
-
 from alembic import op
 import sqlalchemy as sa
+from app.configs import get_environment
 
+_env = get_environment()
 
 # revision identifiers, used by Alembic.
 revision: str = '873ef9b26213'
@@ -19,36 +20,37 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    op.execute("""
-CREATE TABLE public.companies (
+    op.execute(f"""         
+
+CREATE TABLE {_env.ENVIRONMENT}.companies (
 	id serial4 NOT NULL,
 	name varchar(50) NOT NULL,
 	CONSTRAINT company_pk PRIMARY KEY (id)
 );
 
-CREATE TABLE public.neighborhoods (
+CREATE TABLE {_env.ENVIRONMENT}.neighborhoods (
 	id serial4 NOT NULL,
 	"name" varchar(100) NOT NULL,
 	CONSTRAINT neighborhood_pk PRIMARY KEY (id),
 	CONSTRAINT neighborhood_un UNIQUE ("name")
 );
-               
-CREATE TABLE public.streets (
-	id int4 NOT NULL DEFAULT nextval('streats_id_seq'::regclass),
+
+CREATE TABLE {_env.ENVIRONMENT}.streets (
+	id int4 NOT NULL,
 	"name" varchar NOT NULL,
 	neighborhood_id int4 NOT NULL,
 	zip_code int4 NULL,
 	CONSTRAINT street_pk PRIMARY KEY (id),
-	CONSTRAINT streets_fk FOREIGN KEY (neighborhood_id) REFERENCES public.neighborhoods(id)
+	CONSTRAINT streets_fk FOREIGN KEY (neighborhood_id) REFERENCES {_env.ENVIRONMENT}.neighborhoods(id)
 );
 
-CREATE TABLE public.modalities (
+CREATE TABLE {_env.ENVIRONMENT}.modalities (
 	id serial4 NOT NULL,
 	"name" varchar(50) NOT NULL,
 	CONSTRAINT modality_pk PRIMARY KEY (id)
 );
 
-CREATE TABLE public.properties (
+CREATE TABLE {_env.ENVIRONMENT}.properties (
 	id serial4 NOT NULL,
 	company_id int4 NOT NULL,
 	code int4 NOT NULL,
@@ -71,23 +73,23 @@ CREATE TABLE public.properties (
 	is_active bool NOT NULL DEFAULT true,
 	CONSTRAINT property_pk PRIMARY KEY (id),
 	CONSTRAINT property_unique UNIQUE (company_id, code),
-	CONSTRAINT properties_fk FOREIGN KEY (neighborhood_id) REFERENCES public.neighborhoods(id),
-	CONSTRAINT property_fk FOREIGN KEY (company_id) REFERENCES public.companies(id),
-	CONSTRAINT property_modality_fk FOREIGN KEY (modality_id) REFERENCES public.modalities(id),
-	CONSTRAINT property_street_fk FOREIGN KEY (street_id) REFERENCES public.streets(id)
+	CONSTRAINT properties_fk FOREIGN KEY (neighborhood_id) REFERENCES {_env.ENVIRONMENT}.neighborhoods(id),
+	CONSTRAINT property_fk FOREIGN KEY (company_id) REFERENCES {_env.ENVIRONMENT}.companies(id),
+	CONSTRAINT property_modality_fk FOREIGN KEY (modality_id) REFERENCES {_env.ENVIRONMENT}.modalities(id),
+	CONSTRAINT property_street_fk FOREIGN KEY (street_id) REFERENCES {_env.ENVIRONMENT}.streets(id)
 );
 
-CREATE TABLE public.property_histories (
+CREATE TABLE {_env.ENVIRONMENT}.property_histories (
 	id serial4 NOT NULL,
 	property_id int4 NOT NULL,
 	price money NOT NULL,
 	created_at timestamp with time zone NOT NULL,
 	updated_at timestamp with time zone NOT NULL,
 	CONSTRAINT property_histories_pk PRIMARY KEY (id),
-	CONSTRAINT property_histories_fk FOREIGN KEY (property_id) REFERENCES public.properties(id)
+	CONSTRAINT property_histories_fk FOREIGN KEY (property_id) REFERENCES {_env.ENVIRONMENT}.properties(id)
 );
 
-CREATE TABLE public.events (
+CREATE TABLE {_env.ENVIRONMENT}.events (
 	id uuid NOT NULL,
 	created_at timestamptz NOT NULL,
 	updated_at timestamp NOT NULL,
