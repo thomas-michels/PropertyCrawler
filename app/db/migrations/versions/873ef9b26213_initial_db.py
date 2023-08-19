@@ -36,12 +36,12 @@ CREATE TABLE {_env.ENVIRONMENT}.neighborhoods (
 );
 
 CREATE TABLE {_env.ENVIRONMENT}.streets (
-	id int4 NOT NULL,
+	id serial4 NOT NULL,
 	"name" varchar NOT NULL,
 	neighborhood_id int4 NOT NULL,
 	zip_code int4 NULL,
 	CONSTRAINT street_pk PRIMARY KEY (id),
-	CONSTRAINT streets_fk FOREIGN KEY (neighborhood_id) REFERENCES {_env.ENVIRONMENT}.neighborhoods(id)
+	CONSTRAINT street_fk FOREIGN KEY (neighborhood_id) REFERENCES {_env.ENVIRONMENT}.neighborhoods(id)
 );
 
 CREATE TABLE {_env.ENVIRONMENT}.modalities (
@@ -55,7 +55,7 @@ CREATE TABLE {_env.ENVIRONMENT}.properties (
 	company_id int4 NOT NULL,
 	code int4 NOT NULL,
 	title varchar(255) NULL,
-	price money NOT NULL,
+	price double precision NOT NULL,
 	description varchar NULL,
 	neighborhood_id int4 NOT NULL,
 	created_at timestamptz NOT NULL,
@@ -82,9 +82,9 @@ CREATE TABLE {_env.ENVIRONMENT}.properties (
 CREATE TABLE {_env.ENVIRONMENT}.property_histories (
 	id serial4 NOT NULL,
 	property_id int4 NOT NULL,
-	price money NOT NULL,
-	created_at timestamp with time zone NOT NULL,
-	updated_at timestamp with time zone NOT NULL,
+	price double precision NOT NULL,
+	created_at timestamptz NOT NULL,
+	updated_at timestamptz NOT NULL,
 	CONSTRAINT property_histories_pk PRIMARY KEY (id),
 	CONSTRAINT property_histories_fk FOREIGN KEY (property_id) REFERENCES {_env.ENVIRONMENT}.properties(id)
 );
@@ -92,7 +92,7 @@ CREATE TABLE {_env.ENVIRONMENT}.property_histories (
 CREATE TABLE {_env.ENVIRONMENT}.events (
 	id uuid NOT NULL,
 	created_at timestamptz NOT NULL,
-	updated_at timestamp NOT NULL,
+	updated_at timestamptz NOT NULL,
 	sent_to varchar(50) NOT NULL,
 	payload jsonb NOT NULL,
 	origin varchar(50) NOT NULL,

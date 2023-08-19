@@ -52,34 +52,47 @@ class PropertyService:
 
         modality_in_db = self.__modality_repository.select_by_name(name=raw_property.modality)
 
-        if not modality_in_db:
+        if not modality_in_db and raw_property.modality:
             modality_in_db = self.__modality_repository.insert(name=raw_property.modality)
 
         neighborhood_in_db = self.__neighborhood_repository.select_by_name(name=raw_property.neighborhood)
 
-        if not neighborhood_in_db:
+        if not neighborhood_in_db and raw_property.neighborhood:
             neighborhood_in_db = self.__neighborhood_repository.insert(name=raw_property.neighborhood)
 
         street_in_db = self.__street_repository.select_by_name(name=raw_property.street)
 
-        if not street_in_db:
+        if not street_in_db and raw_property.street:
             street_in_db = self.__street_repository.insert(neighborhood_id=neighborhood_in_db.id, name=raw_property.street)
 
         company_in_db = self.__company_repository.select_by_name(name=raw_property.company)
 
-        property.modality_id = modality_in_db.id
-        property.neighborhood_id = neighborhood_in_db.id
-        property.street_id = street_in_db.id
-        property.company_id = company_in_db.id
+        property.modality_id = modality_in_db.id if modality_in_db else None
+        property.neighborhood_id = neighborhood_in_db.id if neighborhood_in_db else None
+        property.street_id = street_in_db.id if street_in_db else None
+        property.company_id = company_in_db.id if company_in_db else None
 
         property_in_db = self.__property_repository.insert(property=property)
 
-        self.__property_repository.conn.commit()
+        if property_in_db:
+            self.__property_repository.conn.commit()
 
-        return property_in_db
+            simple = SimpleProperty(
+                id=property_in_db.id,
+                code=property_in_db.code,
+                company_id=property_in_db.company_id,
+                property_url=property_in_db.property_url
+            )
+
+            self.__redis_property_repository.insert_simple_property(property=simple)
+
+            return property_in_db
 
     def search_all_codes(self, active: bool = False) -> List[SimpleProperty]:
         return self.__property_repository.select_all_codes(active=active)
+    
+    def search_by_url(self, url: str) -> SimpleProperty:
+        return self.__redis_property_repository.select_by_url(url=url)
 
     def search_by_id(self, id: int) -> PropertyInDB:
         return self.__property_repository.select_by_id(id=id)

@@ -6,6 +6,7 @@ from app.dependencies.worker.utils.event_schema import EventSchema
 from app.dependencies.worker import KombuProducer
 from app.composers import property_composer
 from app.configs import get_environment, get_logger
+from datetime import datetime
 
 _env = get_environment()
 _logger = get_logger(__name__)
@@ -31,7 +32,9 @@ class PropertyValidatorCallback(Callback):
                     id=message.id,
                     origin=message.sent_to,
                     sent_to=_env.SAVE_PROPERTY_CHANNEL,
-                    payload=raw_property.model_dump()
+                    payload=raw_property.model_dump(),
+                    created_at=datetime.now(),
+                    updated_at=datetime.now()
                 )
                 return KombuProducer.send_messages(conn=self.conn, message=new_message)
 
@@ -40,7 +43,9 @@ class PropertyValidatorCallback(Callback):
                     id=message.id,
                     origin=message.sent_to,
                     sent_to=_env.UPDATE_PROPERTY_CHANNEL,
-                    payload=raw_property.model_dump()
+                    payload=raw_property.model_dump(),
+                    created_at=datetime.now(),
+                    updated_at=datetime.now()
                 )
                 return KombuProducer.send_messages(conn=self.conn, message=new_message)
 

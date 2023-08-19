@@ -23,8 +23,8 @@ depends_on: Union[str, Sequence[str], None] = '873ef9b26213'
 
 def upgrade() -> None:
     op.execute(f"""
-INSERT INTO {_env.ENVIRONMENT}.companies("name") VALUES('Portal Imóveis');
-INSERT INTO {_env.ENVIRONMENT}.companies("name") VALUES('Zap Imóveis');
+INSERT INTO {_env.ENVIRONMENT}.companies("name") VALUES('portal_imoveis');
+INSERT INTO {_env.ENVIRONMENT}.companies("name") VALUES('zap_imoveis');
                """)
 
 

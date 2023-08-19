@@ -13,7 +13,8 @@ class RawPGConnection(DBConnection):
         self.__start_connection()
 
     def execute(self, sql_statement: str, values: tuple = None):
-        self.cursor.execute(sql_statement, values)
+        sql = sql_statement.replace("public", _env.ENVIRONMENT)
+        self.cursor.execute(sql, values)
 
     def commit(self):
         self.conn.commit()

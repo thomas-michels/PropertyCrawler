@@ -6,6 +6,7 @@ from app.dependencies.worker.utils.event_schema import EventSchema
 from app.dependencies.worker import KombuProducer
 from app.composers import property_composer
 from app.configs import get_logger, get_environment
+from datetime import datetime
 
 _logger = get_logger(__name__)
 _env = get_environment()
@@ -35,7 +36,9 @@ class UpdatePropertyCallback(Callback):
                 new_message = EventSchema(
                     id=message.id,
                     origin=message.sent_to,
-                    sent_to=_env.PROPERTY_OUT_CHANNEL
+                    sent_to=_env.PROPERTY_OUT_CHANNEL,
+                    created_at=datetime.now(),
+                    updated_at=datetime.now()
                 )
                 KombuProducer.send_messages(conn=self.conn, message=new_message)
 

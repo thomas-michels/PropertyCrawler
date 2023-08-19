@@ -17,7 +17,8 @@ class EventRepository(Repository):
             query = '''
             INSERT INTO public.events
             (id, created_at, updated_at, sent_to, payload, origin)
-            VALUES(%(id)s, %(created_at)s, %(updated_at)s, %(sent_to)s, %(payload)s, %(origin)s);
+            VALUES(%(id)s, %(created_at)s, %(updated_at)s, %(sent_to)s, %(payload)s, %(origin)s)
+            RETURNING 1;
             '''
             self.conn.execute(sql_statement=query, values={
                 "id": event.id,

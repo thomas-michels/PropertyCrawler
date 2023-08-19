@@ -41,7 +41,7 @@ class RedisClient:
         self.__start_conn()
         _logger.debug("Redis connected")
 
-    def __exit__(self):
+    def __exit__(self, type, value, traceback):
         """
         Method to close connection
         """

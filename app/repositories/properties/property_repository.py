@@ -3,6 +3,7 @@ from app.repositories.base_repository import Repository
 from app.entities import Property, PropertyInDB, SimpleProperty
 from app.configs import get_logger
 from typing import List
+from psycopg.errors import UniqueViolation
 
 _logger = get_logger(__name__)
 
@@ -32,6 +33,9 @@ class PropertyRepository(Repository):
 
             if raw_property:
                 return PropertyInDB(**raw_property)
+            
+        except UniqueViolation:
+            return False
 
         except Exception as error:
             _logger.error(f"Error: {str(error)}. Data: {property.model_dump(mode='json')}")

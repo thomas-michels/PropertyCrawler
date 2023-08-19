@@ -3,7 +3,8 @@ import requests
 from time import sleep
 from random import randint
 from app.configs import get_environment, get_logger
-from app.dependencies.worker import EventSchema, KombuProducer
+from app.dependencies.worker.utils.event_schema import EventSchema
+from app.dependencies.worker.producer import KombuProducer
 from app.db import RawPGConnection
 from uuid import uuid4
 from datetime import datetime
@@ -53,7 +54,7 @@ def start_crawler():
                     url = button.attrs['href']
                     _logger.info(f"New property found: {url}")
 
-                    code = url.split("/")[-1]
+                    code = int(url.split("/")[-1])
 
                     event = EventSchema(
                         id=str(uuid4()),
@@ -61,7 +62,7 @@ def start_crawler():
                         sent_to=_env.PROPERTY_IN_CHANNEL,
                         payload={
                             "property_url": url,
-                            "company": "Portal Imóveis",
+                            "company": "portal_imoveis",
                             "code": code
                         },
                         created_at=datetime.now(),
