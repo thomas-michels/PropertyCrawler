@@ -38,7 +38,7 @@ class PropertyValidatorCallback(Callback):
                 )
                 return KombuProducer.send_messages(conn=self.conn, message=new_message)
 
-            if property_in_db.price != raw_property.price:
+            elif property_in_db.price != raw_property.price:
                 new_message = EventSchema(
                     id=message.id,
                     origin=message.sent_to,
@@ -49,7 +49,16 @@ class PropertyValidatorCallback(Callback):
                 )
                 return KombuProducer.send_messages(conn=self.conn, message=new_message)
 
-            return True
+            else:
+                new_message = EventSchema(
+                    id=message.id,
+                    origin=message.sent_to,
+                    sent_to=_env.PROPERTY_OUT_CHANNEL,
+                    payload={},
+                    created_at=datetime.now(),
+                    updated_at=datetime.now()
+                )
+                return KombuProducer.send_messages(conn=self.conn, message=new_message)
 
         except Exception as error:
             _logger.error(f"Error: {str(error)}. Data: {message.model_dump()}")

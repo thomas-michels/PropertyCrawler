@@ -108,10 +108,13 @@ def start_characteristics_crawler(message: EventSchema) -> RawProperty:
                 neighborhood = comment.next.strip()
 
         if street:
-            # padrao_remover_r = r'^\s*r\s*(rua)?\s*'
-            # TODO adicionar validação para ROD, AL, AER e AV
             padrao_remover_r = r'^\s*r\s*(rua)?\s*TRV\s+(.*?)\s*,\s*s/n°'
             padrao_remover_hifen = r'\s*-\s*$'
+
+            street = street.replace("ROD ", "rua ")
+            street = street.replace("AL ", "rua ")
+            street = street.replace("AER ", "rua ")
+            street = street.replace("AV ", "rua ")
 
             string = re.sub(padrao_remover_r, '', street, flags=re.IGNORECASE)
             string = re.sub(padrao_remover_hifen, '', string)

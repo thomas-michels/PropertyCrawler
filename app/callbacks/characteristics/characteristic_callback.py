@@ -29,7 +29,15 @@ class CharacteristicCallback(Callback):
             raw_property = start_characteristics_crawler(message=message)
 
         else:
-            return False
+            new_message = EventSchema(
+                id=message.id,
+                origin=message.sent_to,
+                sent_to=_env.PROPERTY_OUT_CHANNEL,
+                payload={},
+                created_at=datetime.now(),
+                updated_at=datetime.now()
+            )
+            return KombuProducer.send_messages(conn=self.conn, message=new_message)
 
         if raw_property:
             new_message = EventSchema(
