@@ -12,5 +12,6 @@ def start_connection_bus() -> Connection:
         hostname=_env.RBMQ_HOST,
         userid=_env.RBMQ_USER,
         password=_env.RBMQ_PASS,
-        port=_env.RBMQ_PORT
+        port=_env.RBMQ_PORT,
+        virtual_host=_env.RBMQ_VHOST
     )

@@ -33,5 +33,6 @@ class Application:
             close_pool(self.pool)
             quit()
 
-    def terminate(self):
+    def terminate(self, *args):
         close_pool(self.pool)
+        quit()

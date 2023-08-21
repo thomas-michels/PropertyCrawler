@@ -16,6 +16,7 @@ class Environment(BaseSettings):
     RBMQ_PASS: str
     RBMQ_PORT: int
     RBMQ_EXCHANGE: str
+    RBMQ_VHOST: str
     PREFETCH_VALUE: int
 
     # DATABASE
