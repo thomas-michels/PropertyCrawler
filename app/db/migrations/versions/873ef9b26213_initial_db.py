@@ -39,7 +39,7 @@ CREATE TABLE {_env.ENVIRONMENT}.streets (
 	id serial4 NOT NULL,
 	"name" varchar NOT NULL,
 	neighborhood_id int4 NOT NULL,
-	zip_code int4 NULL,
+	zip_code varchar NULL,
 	CONSTRAINT street_pk PRIMARY KEY (id),
 	CONSTRAINT street_fk FOREIGN KEY (neighborhood_id) REFERENCES {_env.ENVIRONMENT}.neighborhoods(id)
 );

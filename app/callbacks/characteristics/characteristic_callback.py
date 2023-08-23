@@ -1,4 +1,5 @@
-from crawler.portal_imoveis.characteristics_crawler import start_characteristics_crawler
+from crawler.portal_imoveis.characteristics_crawler import start_characteristics_crawler as start_portal_characteristics_crawler
+from crawler.zap_imoveis.characteristics_crawler import start_characteristics_crawler as start_zap_characteristics_crawler
 from app.callbacks.callback_interface.callback_base import Callback
 from app.db import DBConnection
 from app.dependencies import RedisClient
@@ -26,7 +27,11 @@ class CharacteristicCallback(Callback):
 
         if company == "portal_imoveis":
             _logger.info(f"Starting Portal imoveis characteristics crawler")
-            raw_property = start_characteristics_crawler(message=message)
+            raw_property = start_portal_characteristics_crawler(message=message)
+
+        elif company == "zap_imoveis":
+            _logger.info(f"Starting Zap imoveis characteristics crawler")
+            raw_property = start_zap_characteristics_crawler(message=message)
 
         else:
             new_message = EventSchema(

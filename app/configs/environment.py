@@ -47,6 +47,8 @@ class Environment(BaseSettings):
 
     # PORTAIS
     PORTAL_IMOVEIS_URL: str
+    ZAP_IMOVEIS_URL: str
+    ZAP_IMOVEIS_BASE_URL: str
 
     class Config:
         """Load config file"""

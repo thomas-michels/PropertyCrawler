@@ -19,6 +19,9 @@ class RawProperty(BaseModel):
     type: str = Field(example="House")
     number: str = Field(example="123")
     street: str = Field(example="Rua Antonio da Veiga")
+    zip_code: str = Field(default=None, example="12312")
+    created_at: datetime = Field(default=None, example=str(datetime.now()))
+    updated_at: datetime = Field(default=None, example=str(datetime.now()))
 
 
 class Property(BaseModel):
@@ -38,13 +41,13 @@ class Property(BaseModel):
     type: str = Field(default=None, example="House")
     number: str = Field(default=None, example="123")
     street_id: int = Field(default=None, example=123)
+    created_at: datetime = Field(default=None, example=str(datetime.now()))
+    updated_at: datetime = Field(default=None, example=str(datetime.now()))
 
 
 class PropertyInDB(Property):
     id: int = Field(example=123)
     is_active: bool = Field(example=True)
-    created_at: datetime = Field(example=str(datetime.now()))
-    updated_at: datetime = Field(example=str(datetime.now()))
 
 
 class SimpleProperty(BaseModel):

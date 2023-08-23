@@ -21,7 +21,7 @@ class PropertyRepository(Repository):
             created_at, updated_at, rooms, bathrooms, "size", parking_space,
             modality_id, image_url, property_url, "type", street_id, "number", is_active)
             VALUES(%(company_id)s, %(code)s, %(title)s, %(price)s, %(description)s, %(neighborhood_id)s,
-            NOW(), NOW(), %(rooms)s, %(bathrooms)s, %(size)s, %(parking_space)s,
+            %(created_at)s, %(updated_at)s, %(rooms)s, %(bathrooms)s, %(size)s, %(parking_space)s,
             %(modality_id)s, %(image_url)s, %(property_url)s, %(type)s, %(street_id)s, %(number)s, true)
             RETURNING id, company_id, code, title, price, description, neighborhood_id,
             created_at, updated_at, rooms, bathrooms, "size", parking_space,

@@ -22,14 +22,14 @@ class Application:
 
             queues = RegisterQueues.register()
 
-            _logger.info("Starting Crawlers")
+            _logger.info("Starting Worker")
 
             with start_connection_bus() as conn:
                 worker = KombuWorker(conn, queues, self.pool)
                 worker.run()
 
         except KeyboardInterrupt:
-            _logger.info("Stopping Crawlers")
+            _logger.info("Stopping Worker")
             close_pool(self.pool)
             quit()
 

@@ -12,6 +12,7 @@ from app.entities import (
     PropertyHistory
 )
 from typing import List
+from datetime import datetime
 
 
 class PropertyService:
@@ -47,7 +48,9 @@ class PropertyService:
             image_url=raw_property.image_url,
             property_url=raw_property.property_url,
             type=raw_property.type,
-            number=raw_property.number
+            number=raw_property.number,
+            created_at=raw_property.created_at if raw_property.created_at else datetime.now(),
+            updated_at=raw_property.updated_at if raw_property.updated_at else datetime.now()
         )
 
         modality_in_db = self.__modality_repository.select_by_name(name=raw_property.modality)
@@ -63,7 +66,11 @@ class PropertyService:
         street_in_db = self.__street_repository.select_by_name(name=raw_property.street)
 
         if not street_in_db and raw_property.street:
-            street_in_db = self.__street_repository.insert(neighborhood_id=neighborhood_in_db.id, name=raw_property.street)
+            street_in_db = self.__street_repository.insert(
+                neighborhood_id=neighborhood_in_db.id,
+                name=raw_property.street,
+                zip_code=raw_property.zip_code
+            )
 
         company_in_db = self.__company_repository.select_by_name(name=raw_property.company)
 
