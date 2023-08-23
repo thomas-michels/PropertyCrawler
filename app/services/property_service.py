@@ -63,20 +63,22 @@ class PropertyService:
         if not neighborhood_in_db and raw_property.neighborhood:
             neighborhood_in_db = self.__neighborhood_repository.insert(name=raw_property.neighborhood)
 
-        street_in_db = self.__street_repository.select_by_name(name=raw_property.street)
+        if raw_property.street:
+            street_in_db = self.__street_repository.select_by_name(name=raw_property.street)
 
-        if not street_in_db and raw_property.street:
-            street_in_db = self.__street_repository.insert(
-                neighborhood_id=neighborhood_in_db.id,
-                name=raw_property.street,
-                zip_code=raw_property.zip_code
-            )
+            if not street_in_db and raw_property.street:
+                street_in_db = self.__street_repository.insert(
+                    neighborhood_id=neighborhood_in_db.id,
+                    name=raw_property.street,
+                    zip_code=raw_property.zip_code
+                )
+
+            property.street_id = street_in_db.id if street_in_db else None
 
         company_in_db = self.__company_repository.select_by_name(name=raw_property.company)
 
         property.modality_id = modality_in_db.id if modality_in_db else None
         property.neighborhood_id = neighborhood_in_db.id if neighborhood_in_db else None
-        property.street_id = street_in_db.id if street_in_db else None
         property.company_id = company_in_db.id if company_in_db else None
 
         property_in_db = self.__property_repository.insert(property=property)

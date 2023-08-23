@@ -20,13 +20,12 @@ class CharacteristicCallback(Callback):
         super().__init__(conn, redis_conn)
 
     def handle(self, message: EventSchema) -> bool:
-
-        sleep(randint(5, 15))
         
         company = message.payload["company"]
 
         if company == "portal_imoveis":
             _logger.info(f"Starting Portal imoveis characteristics crawler")
+            sleep(randint(5, 15))
             raw_property = start_portal_characteristics_crawler(message=message)
 
         elif company == "zap_imoveis":
@@ -49,7 +48,7 @@ class CharacteristicCallback(Callback):
                 id=message.id,
                 origin=message.sent_to,
                 sent_to=_env.PROPERTY_VALIDATOR_CHANNEL,
-                payload=raw_property.model_dump(),
+                payload=raw_property.model_dump_json(),
                 created_at=datetime.now(),
                 updated_at=datetime.now()
             )

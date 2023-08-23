@@ -32,7 +32,6 @@ def start_crawler():
 
     with RawPGConnection() as conn:
         while offset <= 10000 or error_count < 5:
-            i += 1
             time_sleep = randint(5, 15)
             _logger.info(f"Sleeping: {time_sleep}")
             sleep(time_sleep)
@@ -67,6 +66,7 @@ def start_crawler():
 
                     code = int(raw_property["id"])
                     property_url = f"{_env.ZAP_IMOVEIS_BASE_URL}{item['link']['href']}"
+                    _logger.info(f"ZAP Imoveis: New property found: {property_url}")
 
                     data = {
                             "property_url": property_url,

@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, Field
 from datetime import datetime
 
@@ -18,10 +19,10 @@ class RawProperty(BaseModel):
     image_url: str = Field(example="www.url.com")
     type: str = Field(example="House")
     number: str = Field(example="123")
-    street: str = Field(example="Rua Antonio da Veiga")
-    zip_code: str = Field(default=None, example="12312")
-    created_at: datetime = Field(default=None, example=str(datetime.now()))
-    updated_at: datetime = Field(default=None, example=str(datetime.now()))
+    street: Optional[str] = Field(default=None, example="Rua Antonio da Veiga")
+    zip_code: Optional[str] = Field(default=None, example="12312")
+    created_at: Optional[datetime] = Field(default=None, example=str(datetime.now()))
+    updated_at: Optional[datetime] = Field(default=None, example=str(datetime.now()))
 
 
 class Property(BaseModel):
@@ -40,7 +41,7 @@ class Property(BaseModel):
     property_url: str = Field(default=None, example="www.url.com")
     type: str = Field(default=None, example="House")
     number: str = Field(default=None, example="123")
-    street_id: int = Field(default=None, example=123)
+    street_id: Optional[int] = Field(default=None, example=123)
     created_at: datetime = Field(default=None, example=str(datetime.now()))
     updated_at: datetime = Field(default=None, example=str(datetime.now()))
 

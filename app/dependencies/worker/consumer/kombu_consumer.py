@@ -11,6 +11,7 @@ from app.exceptions import QueueNotFound
 from app.dependencies.worker.consumer.manager import QueueManager
 from app.dependencies.worker.utils.validate_event import payload_conversor
 from app.dependencies.redis_client import RedisClient
+import json
 
 _logger = get_logger(name=__name__)
 _env = get_environment()
@@ -46,6 +47,9 @@ class KombuWorker(ConsumerMixin):
                 callback = callback(pg_connection, redis_conn)
                 event_schema = payload_conversor(body)
                 if event_schema:
+                    if isinstance(event_schema.payload, str):
+                        event_schema.payload = json.loads(event_schema.payload)
+
                     callback.handle(event_schema)
 
                 message.ack()

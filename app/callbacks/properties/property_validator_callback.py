@@ -32,7 +32,7 @@ class PropertyValidatorCallback(Callback):
                     id=message.id,
                     origin=message.sent_to,
                     sent_to=_env.SAVE_PROPERTY_CHANNEL,
-                    payload=raw_property.model_dump(),
+                    payload=raw_property.model_dump_json(),
                     created_at=datetime.now(),
                     updated_at=datetime.now()
                 )
@@ -43,7 +43,7 @@ class PropertyValidatorCallback(Callback):
                     id=message.id,
                     origin=message.sent_to,
                     sent_to=_env.UPDATE_PROPERTY_CHANNEL,
-                    payload=raw_property.model_dump(),
+                    payload=raw_property.model_dump_json(),
                     created_at=datetime.now(),
                     updated_at=datetime.now()
                 )
@@ -61,5 +61,5 @@ class PropertyValidatorCallback(Callback):
                 return KombuProducer.send_messages(conn=self.conn, message=new_message)
 
         except Exception as error:
-            _logger.error(f"Error: {str(error)}. Data: {message.model_dump()}")
+            _logger.error(f"Error: {str(error)}. Data: {message.model_dump_json()}")
             return False

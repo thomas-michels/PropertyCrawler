@@ -53,7 +53,7 @@ CREATE TABLE {_env.ENVIRONMENT}.modalities (
 CREATE TABLE {_env.ENVIRONMENT}.properties (
 	id serial4 NOT NULL,
 	company_id int4 NOT NULL,
-	code int4 NOT NULL,
+	code int8 NOT NULL,
 	title varchar(255) NULL,
 	price double precision NOT NULL,
 	description varchar NULL,
