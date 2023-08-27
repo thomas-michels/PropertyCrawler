@@ -72,7 +72,8 @@ def start_crawler():
                             "property_url": property_url,
                             "company": "zap_imoveis",
                             "code": code,
-                            "data": item
+                            "data": item,
+                            "is_new_property": True
                     }
 
                     event = EventSchema(

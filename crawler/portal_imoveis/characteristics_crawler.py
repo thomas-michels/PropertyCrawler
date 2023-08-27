@@ -104,6 +104,7 @@ def start_characteristics_crawler(message: EventSchema) -> RawProperty:
         for comment in comments:
             formated = str(comment).lower()
             if formated.__contains__(" rua ") or formated.__contains__(" r "):
+                # arrumar essa parte nao ta vindo neighborhood as vezes
                 street = formated
                 neighborhood = comment.next.strip()
 

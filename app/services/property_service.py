@@ -99,7 +99,7 @@ class PropertyService:
 
     def search_all_codes(self, active: bool = False) -> List[SimpleProperty]:
         return self.__property_repository.select_all_codes(active=active)
-    
+
     def search_by_url(self, url: str) -> SimpleProperty:
         return self.__redis_property_repository.select_by_url(url=url)
 
@@ -111,13 +111,21 @@ class PropertyService:
         if company_in_db:
             return self.__property_repository.select_by_code_and_company(code=code, company_id=company_in_db.id)
 
-    def update_price(self, id: int, new_price: float) -> bool:
-        property = self.__property_repository.select_by_id(id=id)
+    def save_on_cache(self, simple_property: SimpleProperty) -> bool:
+        return self.__redis_property_repository.insert_simple_property(property=simple_property)
+    
+    def check_if_cache_is_udpated(self) -> bool:
+        return self.__redis_property_repository.is_updated()
+    
+    def updating_cache(self) -> bool:
+        return self.__redis_property_repository.updating()
+
+    def update_price(self, property: PropertyInDB, new_price: float) -> bool:
 
         if not property:
             return False
 
-        is_updated = self.__property_repository.update_price(id=id, new_price=new_price)
+        is_updated = self.__property_repository.update_price(id=property.id, new_price=new_price)
 
         if is_updated:
             property_history = PropertyHistory(

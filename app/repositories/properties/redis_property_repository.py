@@ -19,11 +19,20 @@ class RedisPropertyRepository:
 
             self.__redis_connection.conn.set(f"property:{property.id}", property.model_dump_json(), ex=timed_cache)
             self.__redis_connection.conn.set(f"property:{property.property_url}", property.model_dump_json(), ex=timed_cache)
+
+            _logger.info(f"PropertyCached: {property.property_url}")
             return True
 
         except Exception as error:
             _logger.error(f"Error: {str(error)}")
             return False
+        
+    def is_updated(self) -> bool:
+        return self.__redis_connection.conn.get(f"properties_updated")
+
+    def updating(self) -> bool:
+        timed_cache = 60 * _env.TIMED_CACHE
+        return self.__redis_connection.conn.set(f"properties_updated", 1, ex=timed_cache)
 
     def select_by_url(self, url: str) -> SimpleProperty:
         try:

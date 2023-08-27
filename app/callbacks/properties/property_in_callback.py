@@ -52,14 +52,17 @@ class PropertyInCallback(Callback):
                 "Cookie": "__cfruid=72ab1a4d676a1b254f1c31fcdceee752d70655ef-1692746103",
                 "User-Agent": "PostmanRuntime/7.32.3"
             }
-            sleep(randint(5, 15))
-            response = requests.get(url=property_url, headers=headers)
+
+            if not message.payload.get("is_new_property"):
+                sleep(randint(5, 15))
+                response = requests.get(url=property_url, headers=headers)
 
         else:
             response = requests.get(url=property_url)
 
         try:
-            response.raise_for_status()
+            if not message.payload.get("is_new_property"):
+                response.raise_for_status()
 
             new_message = EventSchema(
                 id=message.id,

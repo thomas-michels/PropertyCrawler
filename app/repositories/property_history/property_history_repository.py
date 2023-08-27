@@ -20,13 +20,17 @@ class PropertyHistoryRepository(Repository):
             VALUES(%(property_id)s, %(price)s, NOW(), NOW())
             RETUNING id, property_id, price, created_at, updated_at;
             '''
-            raw_history = self.conn.execute(sql_statement=query, values=property_history.model_dump())
+            raw_history = self.conn.execute(sql_statement=query, values={
+                "property_id": property_history.property_id,
+                "price": property_history.price
+            })
 
             if raw_history:
+                _logger.info(f"NewHistorySaved: {property_history.property_id}")
                 return PropertyHistoryInDB(**raw_history)
 
         except Exception as error:
-            _logger.error(f"Error: {str(error)}. Data: {property_history.model_dump('json')}")
+            _logger.error(f"Error: {str(error)}. Data: {property_history.model_dump_json()}")
 
     def select_by_property_id(self, property_id: int) -> List[PropertyHistoryInDB]:
         try:

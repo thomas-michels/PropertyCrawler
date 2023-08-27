@@ -20,7 +20,6 @@ class UpdatePropertyCallback(Callback):
 
     def handle(self, message: EventSchema) -> bool:
         try:
-            # TODO falta arrumar esse
             raw_property = RawProperty(**message.payload)
 
             property_in_db = self.__property_services.search_by_code_and_company(
@@ -29,9 +28,10 @@ class UpdatePropertyCallback(Callback):
             )
 
             is_updated = self.__property_services.update_price(
-                id=property_in_db.id,
+                property=property_in_db,
                 new_price=raw_property.price
             )
+
             if is_updated:
                 _logger.info(f"Property with id {property_in_db.id} has a new price!")
                 new_message = EventSchema(
@@ -46,5 +46,5 @@ class UpdatePropertyCallback(Callback):
             return is_updated
 
         except Exception as error:
-            _logger.error(f"Error: {str(error)}. Data: {message.model_dump()}")
+            _logger.error(f"Error: {str(error)}. Data: {message.model_dump_json()}")
             return False

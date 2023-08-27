@@ -5,6 +5,7 @@ from app.dependencies.worker import (
     RegisterQueues,
     start_connection_bus
 )
+# from app.composers import property_composer
 import signal
 
 _logger = get_logger(__name__)
@@ -22,6 +23,8 @@ class Application:
 
             queues = RegisterQueues.register()
 
+            # self.__start_cache()
+
             _logger.info("Starting Worker")
 
             with start_connection_bus() as conn:
@@ -36,3 +39,24 @@ class Application:
     def terminate(self, *args):
         close_pool(self.pool)
         quit()
+
+    # def __start_cache(self):
+    #     _logger.info("Fetching all properties had inserted")
+    #     with RawPGConnection() as pg_connection:
+    #         redis_connection = RedisClient()
+
+    #         property_services = property_composer(
+    #             connection=pg_connection,
+    #             redis_connection=redis_connection
+    #         )
+
+    #         if not property_services.check_if_cache_is_udpated():
+    #             property_services.updating_cache()
+    #             all_properties = property_services.search_all_codes(active=True)
+
+    #             for simple_property in all_properties:
+    #                 property_services.save_on_cache(simple_property=simple_property)
+
+    #         redis_connection.close()
+
+    #     _logger.info("Properties cached")
