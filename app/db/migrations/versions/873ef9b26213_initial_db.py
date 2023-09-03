@@ -40,9 +40,15 @@ CREATE TABLE {_env.ENVIRONMENT}.streets (
 	"name" varchar NOT NULL,
 	neighborhood_id int4 NOT NULL,
 	zip_code varchar NULL,
+	flood_quota numeric NULL,
+	latitude varchar(20) NULL,
+	longitude varchar(20) NULL,
 	CONSTRAINT street_pk PRIMARY KEY (id),
+	CONSTRAINT streets_un UNIQUE (name, zip_code),
 	CONSTRAINT street_fk FOREIGN KEY (neighborhood_id) REFERENCES {_env.ENVIRONMENT}.neighborhoods(id)
 );
+CREATE INDEX streets_name_idx ON {_env.ENVIRONMENT}.streets USING btree (name);
+CREATE INDEX streets_zip_code_idx ON {_env.ENVIRONMENT}.streets USING btree (zip_code);
 
 CREATE TABLE {_env.ENVIRONMENT}.modalities (
 	id serial4 NOT NULL,
