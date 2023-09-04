@@ -3,13 +3,12 @@ from app.db import DBConnection
 from app.dependencies import RedisClient
 from app.dependencies.worker.utils.event_schema import EventSchema
 from app.dependencies.worker import KombuProducer
+from app.entities import RawProperty
 from app.configs import get_environment, get_logger
 from app.composers import property_composer
 import requests
 from requests.exceptions import HTTPError
 from datetime import datetime
-from time import sleep
-from random import randint
 
 _env = get_environment()
 _logger = get_logger(__name__)
@@ -25,64 +24,72 @@ class PropertyInCallback(Callback):
         )
 
     def handle(self, message: EventSchema) -> bool:
-        
-        property_url = message.payload.get("property_url")
-
-        if not property_url:
-            return True
-
-        simple_property = self.__property_services.search_by_url(url=property_url)
-
-        if simple_property:
-            _logger.info(f"Property had already saved today - URL: {property_url}")
-            new_message = EventSchema(
-                id=message.id,
-                origin=message.sent_to,
-                sent_to=_env.PROPERTY_OUT_CHANNEL,
-                payload={},
-                created_at=datetime.now(),
-                updated_at=datetime.now()
-            )
-            return KombuProducer.send_messages(conn=self.conn, message=new_message)
-
-        if message.payload["company"] == "zap_imoveis":
-            headers = {
-                "domain": ".zapimoveis.com.br",
-                "X-Domain": ".zapimoveis.com.br",
-                "Cookie": "__cfruid=72ab1a4d676a1b254f1c31fcdceee752d70655ef-1692746103",
-                "User-Agent": "PostmanRuntime/7.32.3"
-            }
-
-            if not message.payload.get("is_new_property"):
-                sleep(randint(5, 15))
-                response = requests.get(url=property_url, headers=headers)
-
-        else:
-            response = requests.get(url=property_url)
-
         try:
-            if not message.payload.get("is_new_property"):
-                response.raise_for_status()
+            property_url = message.payload.get("property_url")
+
+            if not property_url:
+                return True
+
+            property = self.__property_services.search_by_url(url=property_url)
+
+            if property:
+                new_message = EventSchema(
+                    id=message.id,
+                    origin=message.sent_to,
+                    sent_to=_env.PROPERTY_VALIDATOR_CHANNEL,
+                    payload={},
+                    created_at=datetime.now(),
+                    updated_at=datetime.now()
+                )
+                return KombuProducer.send_messages(conn=self.conn, message=new_message)            
+
+            raw_property = RawProperty(**message.payload)
+
+            if raw_property.zip_code:
+                try:
+                    address = None
+
+                    if raw_property.zip_code[-3] != "-":
+                        zip_code = raw_property.zip_code.split()
+                        zip_code.insert(-3, "-")
+                        raw_property.zip_code = "".join(zip_code)
+
+                    url = f"{_env.BASE_ADDRESS_URL}/address/zip-code/{raw_property.zip_code}"
+
+                    address = requests.get(url=url)
+                    address.raise_for_status()
+
+                except HTTPError:
+                    if raw_property.street:
+                        url = f"{_env.BASE_ADDRESS_URL}/address/street/{raw_property.street}"
+
+                        address = requests.get(url=url)
+                        address.raise_for_status()
+
+                    elif raw_property.neighborhood:
+                        url = f"{_env.BASE_ADDRESS_URL}/address/neighborhood/{raw_property.neighborhood}"
+
+                        address = requests.get(url=url)
+                        address.raise_for_status()
+
+                finally:
+                    if address:
+                        raw_property.street_id = address["street_id"]
+                        raw_property.street = address["street_name"]
+                        raw_property.neighborhood_id = address["neighborhood_id"]
+                        raw_property.neighborhood = address["neighborhood_name"]
 
             new_message = EventSchema(
                 id=message.id,
                 origin=message.sent_to,
-                sent_to=_env.CHARACTERISTICS_CHANNEL,
-                payload=message.payload,
+                sent_to=_env.SAVE_PROPERTY_CHANNEL,
+                payload=raw_property.model_dump(),
                 created_at=datetime.now(),
                 updated_at=datetime.now()
             )
 
             return KombuProducer.send_messages(conn=self.conn, message=new_message)
 
-        except HTTPError:
-            new_message = EventSchema(
-                id=message.id,
-                origin=message.sent_to,
-                sent_to=_env.INACTIVE_PROPERTY_CHANNEL,
-                payload=message.payload,
-                created_at=datetime.now(),
-                updated_at=datetime.now()
-            )
-
+        except Exception as error:
+            _logger.error(f"Error: {str(error)}")
             return True

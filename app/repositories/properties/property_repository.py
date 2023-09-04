@@ -91,6 +91,19 @@ class PropertyRepository(Repository):
         except Exception as error:
             _logger.error(f"Error: {str(error)}")
             return []
+        
+    def select_by_url(self, url: str) -> PropertyInDB:
+        query = '''
+        SELECT id, company_id, code, title, price, description, neighborhood_id,
+        created_at, updated_at, rooms, bathrooms, "size", parking_space,
+        modality_id, image_url, property_url, "type", street_id, "number", is_active
+        FROM public.properties
+        WHERE property_url=%(property_url)s;
+        '''
+        raw_property = self.conn.execute(sql_statement=query, values={"property_url": url})
+
+        if raw_property:
+            return PropertyInDB(**raw_property)
 
     def update_price(self, id: int, new_price: float) -> bool:
         try:

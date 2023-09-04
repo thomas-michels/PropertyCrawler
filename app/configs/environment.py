@@ -9,6 +9,8 @@ class Environment(BaseSettings):
     """
     Environment, add the variable and its type here matching the .env file
     """
+    # APPLICATION
+    BASE_ADDRESS_URL: str
 
     # RABBIT
     RBMQ_HOST: str

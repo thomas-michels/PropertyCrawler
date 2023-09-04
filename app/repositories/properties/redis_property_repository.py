@@ -26,13 +26,6 @@ class RedisPropertyRepository:
         except Exception as error:
             _logger.error(f"Error: {str(error)}")
             return False
-        
-    def is_updated(self) -> bool:
-        return self.__redis_connection.conn.get(f"properties_updated")
-
-    def updating(self) -> bool:
-        timed_cache = 60 * _env.TIMED_CACHE
-        return self.__redis_connection.conn.set(f"properties_updated", 1, ex=timed_cache)
 
     def select_by_url(self, url: str) -> SimpleProperty:
         try:

@@ -1,1 +1,0 @@
-from .new_address_callback import NewAddressCallback
