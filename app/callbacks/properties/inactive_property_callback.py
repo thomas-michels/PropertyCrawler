@@ -18,10 +18,9 @@ class InactivePropertyCallback(Callback):
         self.__property_services = property_composer(connection=self.conn, redis_connection=self.redis_conn)
 
     def handle(self, message: EventSchema) -> bool:
-        code = message.payload["code"]
-        company = message.payload["company"]
+        url = message.payload["property_url"]
     
-        property_in_db = self.__property_services.search_by_code_and_company(code=code, company=company)
+        property_in_db = self.__property_services.search_by_url(url=url)
 
         if property_in_db:
             self.__property_services.delete(id=property_in_db.id)

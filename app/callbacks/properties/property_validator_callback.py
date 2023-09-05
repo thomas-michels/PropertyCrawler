@@ -27,18 +27,7 @@ class PropertyValidatorCallback(Callback):
                 company=raw_property.company
             )
 
-            if not property_in_db:
-                new_message = EventSchema(
-                    id=message.id,
-                    origin=message.sent_to,
-                    sent_to=_env.SAVE_PROPERTY_CHANNEL,
-                    payload=raw_property.model_dump_json(),
-                    created_at=datetime.now(),
-                    updated_at=datetime.now()
-                )
-                return KombuProducer.send_messages(conn=self.conn, message=new_message)
-
-            elif property_in_db.price != raw_property.price:
+            if property_in_db.price != raw_property.price:
                 new_message = EventSchema(
                     id=message.id,
                     origin=message.sent_to,

@@ -37,4 +37,4 @@ class SavePropertyCallback(Callback):
                 return True
 
         except Exception as error:
-            _logger.error(f"Error: {error}")
+            _logger.error(f"Error: {error}. Data: {message.model_dump_json()}")

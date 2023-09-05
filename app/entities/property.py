@@ -33,7 +33,7 @@ class Property(BaseModel):
     title: str = Field(default=None, example="house")
     price: float = Field(default=None, example=123.3)
     description: str = Field(default=None, example="description")
-    neighborhood_id: int = Field(default=None, example=123)
+    neighborhood_id: Optional[int] = Field(default=None, example=123)
     rooms: int = Field(default=None, example=123)
     bathrooms: int = Field(default=None, example=123)
     size: float = Field(default=None, example=123)

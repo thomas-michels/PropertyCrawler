@@ -37,18 +37,17 @@ class PropertyInCallback(Callback):
                     id=message.id,
                     origin=message.sent_to,
                     sent_to=_env.PROPERTY_VALIDATOR_CHANNEL,
-                    payload={},
+                    payload=message.payload,
                     created_at=datetime.now(),
                     updated_at=datetime.now()
                 )
                 return KombuProducer.send_messages(conn=self.conn, message=new_message)            
 
             raw_property = RawProperty(**message.payload)
+            address = None
 
             if raw_property.zip_code:
                 try:
-                    address = None
-
                     if raw_property.zip_code[-3] != "-":
                         zip_code = raw_property.zip_code.split()
                         zip_code.insert(-3, "-")
@@ -58,26 +57,38 @@ class PropertyInCallback(Callback):
 
                     address = requests.get(url=url)
                     address.raise_for_status()
+                    address = address.json()
 
                 except HTTPError:
-                    if raw_property.street:
-                        url = f"{_env.BASE_ADDRESS_URL}/address/street/{raw_property.street}"
+                    ...
 
-                        address = requests.get(url=url)
-                        address.raise_for_status()
+            if raw_property.street and not address:
+                try:
+                    url = f"{_env.BASE_ADDRESS_URL}/address/street/{raw_property.street}"
 
-                    elif raw_property.neighborhood:
-                        url = f"{_env.BASE_ADDRESS_URL}/address/neighborhood/{raw_property.neighborhood}"
+                    address = requests.get(url=url)
+                    address.raise_for_status()
+                    address = address.json()
 
-                        address = requests.get(url=url)
-                        address.raise_for_status()
+                except HTTPError:
+                    ...
 
-                finally:
-                    if address:
-                        raw_property.street_id = address["street_id"]
-                        raw_property.street = address["street_name"]
-                        raw_property.neighborhood_id = address["neighborhood_id"]
-                        raw_property.neighborhood = address["neighborhood_name"]
+            if raw_property.neighborhood and not address:
+                try:
+                    url = f"{_env.BASE_ADDRESS_URL}/address/neighborhood/{raw_property.neighborhood}"
+
+                    address = requests.get(url=url)
+                    address.raise_for_status()
+                    address = address.json()
+
+                except HTTPError:
+                    ...
+
+            if address:
+                raw_property.street_id = address["street_id"]
+                raw_property.street = address["street_name"]
+                raw_property.neighborhood_id = address["neighborhood_id"]
+                raw_property.neighborhood = address["neighborhood_name"]
 
             new_message = EventSchema(
                 id=message.id,
