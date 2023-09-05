@@ -22,10 +22,7 @@ class UpdatePropertyCallback(Callback):
         try:
             raw_property = RawProperty(**message.payload)
 
-            property_in_db = self.__property_services.search_by_code_and_company(
-                    code=raw_property.code,
-                    company=raw_property.company
-            )
+            property_in_db = self.__property_services.search_by_url(url=raw_property.property_url)
 
             is_updated = self.__property_services.update_price(
                 property=property_in_db,
