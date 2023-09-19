@@ -2,6 +2,7 @@ from app.dependencies import RedisClient
 from app.entities import SimpleProperty
 from app.configs import get_environment, get_logger
 from typing import List
+from datetime import datetime, timedelta
 import json
 
 _env = get_environment()
@@ -15,7 +16,10 @@ class RedisPropertyRepository:
 
     def insert_simple_property(self, property: SimpleProperty) -> bool:
         try:
-            timed_cache = 60 * _env.TIMED_CACHE
+            now = datetime.now()
+            tomorrow = now + timedelta(days=1)
+            tomorrow_midnight = datetime(year=tomorrow.year, month=tomorrow.month, day=tomorrow.day)
+            timed_cache = (tomorrow_midnight - now).seconds
 
             self.__redis_connection.conn.set(f"property:{property.id}", property.model_dump_json(), ex=timed_cache)
             self.__redis_connection.conn.set(f"property:{property.property_url}", property.model_dump_json(), ex=timed_cache)
