@@ -5,3 +5,6 @@ build:
 
 run:
 	docker run --env-file .env --name property_services -d --network=propertycrawler_crawler_network property_services
+
+migrate:
+	alembic upgrade head

@@ -31,8 +31,11 @@ CREATE TABLE {_env.ENVIRONMENT}.companies (
 CREATE TABLE {_env.ENVIRONMENT}.neighborhoods (
 	id serial4 NOT NULL,
 	"name" varchar(100) NOT NULL,
+	population int4 NULL,
+	houses int4 NULL,
+	area numeric(10, 5) NULL,
 	CONSTRAINT neighborhood_pk PRIMARY KEY (id),
-	CONSTRAINT neighborhood_un UNIQUE ("name")
+	CONSTRAINT neighborhood_un UNIQUE (name)
 );
 
 CREATE TABLE {_env.ENVIRONMENT}.streets (
