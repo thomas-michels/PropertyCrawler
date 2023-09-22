@@ -43,14 +43,7 @@ class Environment(BaseSettings):
     UPDATE_PROPERTY_CHANNEL: str
     INACTIVE_PROPERTY_CHANNEL: str
     PROPERTY_VALIDATOR_CHANNEL: str
-    CHARACTERISTICS_CHANNEL: str
     PROPERTY_OUT_CHANNEL: str
-    NEW_ADDRESS_CHANNEL: str
-
-    # PORTAIS
-    PORTAL_IMOVEIS_URL: str
-    ZAP_IMOVEIS_URL: str
-    ZAP_IMOVEIS_BASE_URL: str
 
     class Config:
         """Load config file"""
