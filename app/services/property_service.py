@@ -34,7 +34,7 @@ class PropertyService:
             code=raw_property.code,
             title=raw_property.title,
             price=raw_property.price,
-            description=raw_property.description,
+            description=raw_property.description.strip().replace("\n", ""),
             rooms=raw_property.rooms,
             bathrooms=raw_property.bathrooms,
             size=raw_property.size,

@@ -47,11 +47,11 @@ class PropertyInCallback(Callback):
             address = None
 
             if raw_property.zip_code:
+                raw_property.zip_code = raw_property.zip_code.replace("-", "")
                 try:
-                    if raw_property.zip_code[-3] != "-":
-                        zip_code = raw_property.zip_code.split()
-                        zip_code.insert(-3, "-")
-                        raw_property.zip_code = "".join(zip_code)
+                    zip_code = list(raw_property.zip_code)
+                    zip_code.insert(-3, "-")
+                    raw_property.zip_code = "".join(zip_code)
 
                     url = f"{_env.BASE_ADDRESS_URL}/address/zip-code/{raw_property.zip_code}"
 
